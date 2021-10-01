@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm
+from forms import UserAddForm, LoginForm, MessageForm, EditProfileForm
 from models import db, connect_db, User, Message, Follows, Likes
 
 import pdb
@@ -78,6 +78,7 @@ def signup():
                 email=form.email.data,
                 image_url=form.image_url.data or User.image_url.default.arg,
             )
+            # db.session.add(user)
             db.session.commit()
 
         except IntegrityError:
@@ -96,45 +97,45 @@ def signup():
 def login():
     """Handle user login."""
 
-    # form = LoginForm()
-
-    # if form.validate_on_submit():
-    #     user = User.authenticate(form.username.data,
-    #                              form.password.data)
-
-    #     if user:
-    #         do_login(user)
-    #         flash(f"Hello, {user.username}!", "success")
-    #         return redirect("/")
-
-    #     flash("Invalid credentials.", 'danger')
-
-    # return render_template('users/login.html', form=form)
-    
     form = LoginForm()
-    
+
     if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        
-        user = User.authenticate(username, password)
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
+
         if user:
-            session["user_id"] = user.id 
-            flash("Invalid credentials.", 'danger')
+            do_login(user)
+            flash(f"Hello, {user.username}!", "success")
             return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    return render_template('users/login.html', form=form)
+    
+    # form = LoginForm()
+    
+    # if form.validate_on_submit():
+    #     username = form.username.data
+    #     password = form.password.data
         
-        else:
-            return render_template('users/login.html', form=form)
+    #     user = User.authenticate(username, password)
+    #     if user:
+    #         session["user_id"] = user.id 
+    #         flash("Invalid credentials.", 'danger')
+    #         return redirect("/")
+        
+    #     else:
+    #         return render_template('users/login.html', form=form)
         
 
 
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
-    # IMPLEMENT THIS
-    user = User.query.get_or_404(session[CURR_USER_KEY])
-    # do_logout()
-    flash(f"You have successfully logged out {user.username}", "success")
+    # Step 2: Fix Logout -- DONE
+    # user = User.query.get_or_404(session[CURR_USER_KEY])
+    do_logout()
+    flash(f"You have successfully logged out {g.user.username}", "success")
     
     return redirect("/login")
 
@@ -234,7 +235,17 @@ def stop_following(follow_id):
 def profile():
     """Update profile for current user."""
 
-    # IMPLEMENT THIS
+    # Step 3: Fix User Profile --
+    if not g.user:
+        flash("Access to this profile has been denied.", "danger")
+        return redirect("/")
+    
+    form = EditProfileForm()
+    
+    if form.validate_on_submit():
+            user = User.authenticate()
+    
+    
 
 
 @app.route('/users/delete', methods=["POST"])
