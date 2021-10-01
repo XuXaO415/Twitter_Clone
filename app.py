@@ -235,7 +235,7 @@ def stop_following(follow_id):
 def profile():
     """Update profile for current user."""
 
-    # Step 3: Fix User Profile --
+    # Step 3: Fix User Profile -- DONE
     if not g.user:
         flash("Access to this profile has been denied.", "danger")
         return redirect("/")
@@ -243,7 +243,24 @@ def profile():
     form = EditProfileForm()
     
     if form.validate_on_submit():
-            user = User.authenticate()
+            user = User.authenticate(form.username.data, form.password.data)
+            
+            if user:
+                user.username = form.username.data
+                user.email = form.email.data
+                user.image_url = form.image_url.data
+                user.bio = form.bio.data
+                user.header_image_url = form.header_image_url.data
+            
+                db.session.add(user)
+                db.session.commit()
+            
+                flash("Your profile has been updated", "success")
+                return redirect(f"/user/{user.id}")
+    else:
+        flash("Incorrect password", "danger")
+    return render_template("/")
+            
     
     
 
