@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
-# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
@@ -45,7 +45,7 @@ def add_user_to_g():
 
 def do_login(user):
     """Log in user."""
-    # pdb.set_trace()
+    
     session[CURR_USER_KEY] = user.id
 
 
@@ -134,9 +134,11 @@ def logout():
     """Handle logout of user."""
     # Step 2: Fix Logout -- DONE
     # user = User.query.get_or_404(session[CURR_USER_KEY])
+
+    # pdb.set_trace()
+    flash(
+        f"You have successfully logged out {session[CURR_USER_KEY]}", "success")
     do_logout()
-    flash(f"You have successfully logged out {g.user.username}", "success")
-    
     return redirect("/login")
 
 
@@ -256,15 +258,12 @@ def profile():
                 db.session.commit()
             
                 flash("Your profile has been updated", "success")
-                return redirect(f"/user/{user.id}")
-    else:
-        flash("Incorrect password", "danger")
-    return render_template("/")
+                return redirect(f"/user/{g.user.id}")
+            else:
+                flash("Incorrect password", "danger")
+    return render_template("users/edit.html", form=form, user=g.user)
             
     
-    
-
-
 @app.route('/users/delete', methods=["POST"])
 def delete_user():
     """Delete user."""

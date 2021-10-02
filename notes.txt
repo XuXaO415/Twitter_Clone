@@ -1,0 +1,16 @@
+How is the logged in user being kept track of?
+Through the is_authenticated property
+
+What does @app.before_request mean?
+What is Flask’s g object? 
+
+This application uses request hooks, in particular,
+the decorator "@app.before_request". before_request registers a function
+to run before each request. Sometimes it is useful to execute code before or after each request is processed.
+For example, in our case, we are creating a database connection and loading a logged in user
+from our database and storing it as g.user (g [context] global as storage)
+
+What is the purpose of add_user_to_g?
+
+
+
