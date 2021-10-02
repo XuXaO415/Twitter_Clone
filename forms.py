@@ -24,9 +24,15 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
     
-class EditProfileForm(UserAddForm):
+class EditProfileForm(FlaskForm):
     """Form for editing a user's profile"""
-        
+    
+    #Can you pass one class into a another subclass? Ex: class EditProfileForm(UserForm)
+    
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    image_url = StringField("(Optional) Bio")
     bio = StringField("(Optional) Bio")
     header_image_url = StringField("(Optional) Header Image URL")
         

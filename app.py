@@ -136,9 +136,9 @@ def logout():
     # user = User.query.get_or_404(session[CURR_USER_KEY])
 
     # pdb.set_trace()
-    flash(
-        f"You have successfully logged out {session[CURR_USER_KEY]}", "success")
     do_logout()
+    flash("You have successfully logged out", "success")
+    
     return redirect("/login")
 
 
@@ -261,7 +261,9 @@ def profile():
                 return redirect(f"/user/{g.user.id}")
             else:
                 flash("Incorrect password", "danger")
-    return render_template("users/edit.html", form=form, user=g.user)
+                return redirect(f"/users/{g.user.id}")
+    else:
+            return render_template("users/edit.html", form=form, user=g.user)
             
     
 @app.route('/users/delete', methods=["POST"])
