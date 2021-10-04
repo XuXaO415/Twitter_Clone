@@ -48,18 +48,19 @@
                     <p>{{ msg.text }}</p>
                 </div>
                 {% if msg in g.user.likes %}
-                <form method="POST" action="/users/add_like/{{ msg.id }}" id="messages-form">
-                    <button class="btn btn-sm btn-primary">
-                        <i class="fa fa-thumbs-up"></i>  
-                    </button>
-                </form>
-                  {% else %}
-                  {{'btn-primary' if msg.id in g.user.likes else 'btn-secondary'}}
+                   {{'btn-primary' if msg.id in g.user.likes else 'btn-secondary'}}
                   <form method="POST" action="/users/delete_like/{{ msg.id }}" id="messages-form">
-                    <button class="btn btn-sm btn-secondary">
+                    <button class="btn btn-sm btn-primary">
                         <i class="fa fa-thumbs-down"></i>  
                     </button>
                     </form>
+                  {% else %}
+                   <form method="POST" action="/users/add_likes/{{ msg.id }}" id="messages-form">
+                    <button class="btn btn-sm btn-secondary">
+                        <i class="fa fa-thumbs-up"></i>  
+                    </button>
+                </form>
+               
                 {% endif %}
             </li>
             {% endfor %}

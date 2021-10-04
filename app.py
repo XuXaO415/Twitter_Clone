@@ -128,18 +128,24 @@ def login():
     #         return render_template('users/login.html', form=form)
         
 
-
-@app.route('/logout')
-def logout():
-    """Handle logout of user."""
-    # Step 2: Fix Logout -- DONE
-
-    # pdb.set_trace()
+@app.route('/logout_user')
+def logout_users():
+    print("Hello")
     do_logout()
     flash("You have successfully logged out", "success")
-    
-    # return redirect(url_for("/login"))
     return redirect("/login")
+
+# @app.route('/logout')
+# def logout():
+#     """Handle logout of user."""
+#     # Step 2: Fix Logout -- DONE
+
+#     pdb.set_trace()
+#     do_logout()
+#     flash("You have successfully logged out", "success")
+    
+#     # return redirect(url_for("/login"))
+#     return redirect("/login")
 
 
 ##############################################################################
@@ -266,8 +272,8 @@ def profile():
             return render_template("users/edit.html", form=form, user=g.user)
 
 
-@app.route("/users/add_likes/<int:message_id>", methods=["POST"])
-def add_likes(message_id):
+@app.route("/users/add_likes/<int:msg_id>", methods=["POST"])
+def add_likes(msg_id):
     """Enables a user to like a warble"""
     
     if not g.user:
@@ -278,36 +284,57 @@ def add_likes(message_id):
     # msg = Message.query.get_or_404(message_id)
     # if msg.user_id != g.user.id:
     #     return redirect("/")
-    liked_message = Message.query.get_or_404(message_id)
-    if liked_message.user_id == g.user.id:
+    # liked_message = Message.query.get_or_404(message_id)
+    # if liked_message.user_id == g.user.id:
         
-        user_likes = g.user.likes
+    #     user_likes = g.user.likes
 
-    if liked_message in user_likes:
-        g.user.likes = [like for like in user_likes if like != liked_message]
-    else:
-        g.user.likes.append(liked_message)
+    # if liked_message in user_likes:
+    #     g.user.likes = [like for like in user_likes if like != liked_message]
+    # else:
+    #     g.user.likes.append(liked_message)
 
-    db.session.commit()
-    
-    return redirect("/")
-
-    
-    # new_like = Likes(user_id=g.user.id, message_id=msg_id)
-    # db.session.add(new_like)
     # db.session.commit()
     
     # return redirect("/")
     
+    msg = Message.query.get_or_404(msg_id)
+    if msg.user_id != g.user.id:
+        return redirect("/")
+    
+    new_like = Likes(user_id=g.user.id, message_id=msg_id)
+    db.session.add(new_like)
+    db.session.commit()
+    
+    flash("You liked this post", "success")
+    return redirect("/")
+
+    
     #From home.html  action="/users/add_like/{{ msg.id }}" 
     
 @app.route("/users/delete_like/<int:msg_id>", methods=["POST"])
-def delete_like(delete_like):
+def delete_like(msg_id):
     """Gives a users the ability to delete/unlike a warble"""
     
     if not g.user:
         flash("You are not the authorized user of this account", "danger")
         return redirect("/")
+    
+    msg = Message.query.get_or_404(msg_id)
+    if msg.user_id != g.user.id:
+        flash("ERROR", "danger")
+        return redirect("/")
+    
+    remove_like = Likes.query.filter(Likes.user_id == g.user.id, Likes.message_id == msg_id).first()
+    # pdb.set_trace()
+    db.session.delete(remove_like)
+    db.session.commit()
+    
+    flash("You unliked this post", "success")
+    return redirect("/")
+    
+    
+        
 
     
 @app.route('/users/delete', methods=["POST"])
