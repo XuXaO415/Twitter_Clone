@@ -264,7 +264,16 @@ def profile():
                 return redirect(f"/users/{g.user.id}")
     else:
             return render_template("users/edit.html", form=form, user=g.user)
-            
+
+
+@app.route("users/likes", methods=["POST"])
+def add_likes():
+    """Enables a user to like a warble"""
+    if not g.user:
+        flash("You are not the authorized user of this account", "danger")
+        return redirect("/")
+    
+    
     
 @app.route('/users/delete', methods=["POST"])
 def delete_user():
