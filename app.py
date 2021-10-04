@@ -266,14 +266,49 @@ def profile():
             return render_template("users/edit.html", form=form, user=g.user)
 
 
-@app.route("users/likes", methods=["POST"])
-def add_likes():
+@app.route("/users/add_likes/<int:message_id>", methods=["POST"])
+def add_likes(message_id):
     """Enables a user to like a warble"""
+    
     if not g.user:
         flash("You are not the authorized user of this account", "danger")
         return redirect("/")
+     
+    #from solutions
+    # msg = Message.query.get_or_404(message_id)
+    # if msg.user_id != g.user.id:
+    #     return redirect("/")
+    liked_message = Message.query.get_or_404(message_id)
+    if liked_message.user_id == g.user.id:
+        
+        user_likes = g.user.likes
+
+    if liked_message in user_likes:
+        g.user.likes = [like for like in user_likes if like != liked_message]
+    else:
+        g.user.likes.append(liked_message)
+
+    db.session.commit()
     
+    return redirect("/")
+
     
+    # new_like = Likes(user_id=g.user.id, message_id=msg_id)
+    # db.session.add(new_like)
+    # db.session.commit()
+    
+    # return redirect("/")
+    
+    #From home.html  action="/users/add_like/{{ msg.id }}" 
+    
+@app.route("/users/delete_like/<int:msg_id>", methods=["POST"])
+def delete_like(delete_like):
+    """Gives a users the ability to delete/unlike a warble"""
+    
+    if not g.user:
+        flash("You are not the authorized user of this account", "danger")
+        return redirect("/")
+
     
 @app.route('/users/delete', methods=["POST"])
 def delete_user():

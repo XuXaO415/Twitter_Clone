@@ -1,5 +1,5 @@
 How is the logged in user being kept track of?
-Through the is_authenticated property
+Through the "is_authenticated" property
 
 What does @app.before_request mean?
 What is Flask’s g object? 
