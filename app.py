@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -133,12 +133,12 @@ def login():
 def logout():
     """Handle logout of user."""
     # Step 2: Fix Logout -- DONE
-    # user = User.query.get_or_404(session[CURR_USER_KEY])
 
     # pdb.set_trace()
     do_logout()
     flash("You have successfully logged out", "success")
     
+    # return redirect(url_for("/login"))
     return redirect("/login")
 
 
@@ -241,8 +241,8 @@ def profile():
     if not g.user:
         flash("Access to this profile has been denied.", "danger")
         return redirect("/")
-    
-    form = EditProfileForm()
+    #passing obj=g.user provides form with defaults from object
+    form = EditProfileForm(obj=g.user)
     
     if form.validate_on_submit():
             user = User.authenticate(form.username.data, form.password.data)
