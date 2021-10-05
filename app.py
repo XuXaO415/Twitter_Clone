@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
@@ -281,11 +281,11 @@ def add_likes(msg_id):
         return redirect("/")
     
     msg = Message.query.get_or_404(msg_id)
-    if msg.user_id != g.user.id:
-        return redirect("/")
     
-    new_like = Likes(user_id=g.user.id, message_id=msg_id)
-    db.session.add(new_like)
+    if msg.user_id != g.user.id:
+        new_likes = Likes(user_id=g.user.id, message_id=msg_id)
+
+    db.session.add(new_likes)
     db.session.commit()
     
     flash("You liked this post", "success")
@@ -314,6 +314,16 @@ def delete_like(msg_id):
     
     flash("You unliked this post", "success")
     return redirect("/")
+
+@app.route("/users/<int:user_id>/likes")
+def users_like(user_id):
+    """Shows a list of a user's liked post/messages"""
+    
+    if not g.user:
+        return redirect("/")
+    
+    user = User.query.get_or_404(user_id)
+    return render_template("/users/detail.html", user=user)
     
     
 @app.route('/users/delete', methods=["POST"])
@@ -399,6 +409,7 @@ def homepage():
         # Creates a list & add/appends followed_users to list
         following.append(g.user)
         following_ids = [follow.id for follow in following]
+        likes = [like.id for like in g.user.likes]
         messages = (Message
                     .query
                     .order_by(Message.timestamp.desc())
