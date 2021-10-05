@@ -421,6 +421,7 @@ def homepage():
 
     else:
         return render_template('home-anon.html')
+    
 
 
 ##############################################################################
@@ -439,3 +440,8 @@ def add_header(req):
     req.headers["Expires"] = "0"
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
+
+##############################################################################
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("/messages/404.html")
