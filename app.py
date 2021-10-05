@@ -304,7 +304,7 @@ def delete_like(msg_id):
     
     msg = Message.query.get_or_404(msg_id)
     if msg.user_id != g.user.id:
-        flash("ERROR", "danger")
+        flash(f"You just unliked {msg.user.username}'s post.", "danger")
         return redirect("/")
     
     remove_like = Likes.query.filter(Likes.user_id == g.user.id, Likes.message_id == msg_id).first()
