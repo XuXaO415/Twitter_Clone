@@ -279,24 +279,6 @@ def add_likes(msg_id):
     if not g.user:
         flash("You are not the authorized user of this account", "danger")
         return redirect("/")
-     
-    #from solutions
-    # msg = Message.query.get_or_404(message_id)
-    # if msg.user_id != g.user.id:
-    #     return redirect("/")
-    # liked_message = Message.query.get_or_404(message_id)
-    # if liked_message.user_id == g.user.id:
-        
-    #     user_likes = g.user.likes
-
-    # if liked_message in user_likes:
-    #     g.user.likes = [like for like in user_likes if like != liked_message]
-    # else:
-    #     g.user.likes.append(liked_message)
-
-    # db.session.commit()
-    
-    # return redirect("/")
     
     msg = Message.query.get_or_404(msg_id)
     if msg.user_id != g.user.id:
@@ -333,9 +315,6 @@ def delete_like(msg_id):
     flash("You unliked this post", "success")
     return redirect("/")
     
-    
-        
-
     
 @app.route('/users/delete', methods=["POST"])
 def delete_user():
@@ -415,9 +394,15 @@ def homepage():
     """
 
     if g.user:
+        
+        following = g.user.following
+        # Creates a list & add/appends followed_users to list
+        following.append(g.user)
+        following_ids = [follow.id for follow in following]
         messages = (Message
                     .query
                     .order_by(Message.timestamp.desc())
+                    .filter(Message.user_id.in_(following_ids))
                     .limit(100)
                     .all())
 
