@@ -1,30 +1,34 @@
-
-
-
 {% extends "base.html" %}
 {% block title %}404{% endblock %}
 
 {% block content %}
 <center>
-  <!-- <iframe src="https://giphy.com/embed/YyKPbc5OOTSQE" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/gustavo-art-kidmograph-gustavo-YyKPbc5OOTSQE"></a></p> -->
-  <!-- <iframe src="https://giphy.com/embed/14uQ3cOFteDaU" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/404-14uQ3cOFteDaU"></a></p> -->
-
-  <div class="img-src">
-    <h2><iframe src="https://giphy.com/embed/YyKPbc5OOTSQE" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></h2>
-<div class="message-404">
-    <div class="display-4" data-content="404">
-        <h1>Page not found</h1>
-    </div>
-
-    <h2>
-        Oh no! Something went wrong.
+    <!-- <iframe src="https://giphy.com/embed/YyKPbc5OOTSQE" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/gustavo-art-kidmograph-gustavo-YyKPbc5OOTSQE"></a></p> -->
+    <!-- <iframe src="https://giphy.com/embed/14uQ3cOFteDaU" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/404-14uQ3cOFteDaU"></a></p> -->
+    <div class="img-src">
         <h2>
-            <div>
-                <a href="/">Homepage</a>
-                <div class="row">
-                    <form class="form-inline d-flex justify-content-center md-form form-sm active-cyan active-cyan-2 mt-2" action="/users">
-                        <!-- <i class="fa fa-search"></i> -->
-                        <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search">
-                    </form>
-                </div>
-                {% endblock %}
+            <iframe
+                src="https://giphy.com/embed/YyKPbc5OOTSQE"
+                width="480"
+                height="480"
+                frameBorder="0"
+                class="giphy-embed"
+                allowFullScreen
+            ></iframe>
+        </h2>
+        <div class="message-404">
+            <div class="display-4" data-content="404">
+                <h1>Page not found</h1>
+            </div>
+            <h2>
+                Oh no! Something went wrong.
+                <h2>
+                    <div>
+                        <a href="/">Homepage</a>
+                        <div class="row">
+                            <form class="form-inline d-flex justify-content-center md-form form-sm active-cyan active-cyan-2 mt-2" action="/users">
+                                <!-- <i class="fa fa-search"></i> -->
+                                <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search">
+                            </form>
+                        </div>
+                        {% endblock %}
