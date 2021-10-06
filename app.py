@@ -256,9 +256,10 @@ def profile():
             if user:
                 user.username = form.username.data
                 user.email = form.email.data
-                user.image_url = form.image_url.data
+                user.image_url = form.image_url.data or g.user.image_url
                 user.bio = form.bio.data
-                user.header_image_url = form.header_image_url.data
+                user.location = form.location.data
+                user.header_image_url = form.header_image_url.data or g.user.header_image_url
             
                 db.session.add(user)
                 db.session.commit()
@@ -269,11 +270,11 @@ def profile():
                 flash("Incorrect password", "danger")
                 return redirect(f"/users/{g.user.id}")
     else:
-            return render_template("users/edit.html", form=form, user=g.user)
+            return render_template("users/edit.html", form=form)
 
 
 @app.route("/users/add_likes/<int:msg_id>", methods=["POST"])
-def add_like(msg_id):
+def add_likes(msg_id):
     """Enables a user to like a warble"""
     
     if not g.user:
@@ -295,8 +296,6 @@ def add_like(msg_id):
     return redirect("/")
 
     
-    #From home.html  action="/users/add_like/{{ msg.id }}" 
-    
 @app.route("/users/delete_like/<int:msg_id>", methods=["POST"])
 def delete_like(msg_id):
     """Gives a users the ability to delete/unlike a warble"""
@@ -316,7 +315,6 @@ def delete_like(msg_id):
     db.session.delete(remove_like)
     db.session.commit()
     
-    # flash("You unliked this post", "success")
     flash(f"You just unliked {msg.user.username}'s post.", "danger")
     return redirect("/")
 
@@ -427,6 +425,11 @@ def homepage():
     else:
         return render_template('home-anon.html')
     
+    
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404   
+    
 
 
 ##############################################################################
@@ -447,6 +450,5 @@ def add_header(req):
     return req
 
 ##############################################################################
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template("/messages/404.html")
+
+

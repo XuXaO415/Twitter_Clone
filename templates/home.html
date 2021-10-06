@@ -51,7 +51,7 @@
                 <!-- {{'btn-primary' if msg.id in g.user.likes else 'btn-secondary'}} -->
                 <form method="POST" action="/users/delete_like/{{ msg.id }}" id="messages-form">
                     <button class="btn btn-sm btn-primary">
-                        <i class="fa fa-thumbs-down"></i>
+                        <i class="fa fa-trash"></i>
                     </button>
                 </form>
                 {% else %}
