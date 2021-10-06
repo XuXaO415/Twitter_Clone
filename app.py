@@ -273,7 +273,7 @@ def profile():
 
 
 @app.route("/users/add_likes/<int:msg_id>", methods=["POST"])
-def add_likes(msg_id):
+def add_like(msg_id):
     """Enables a user to like a warble"""
     
     if not g.user:
@@ -282,13 +282,16 @@ def add_likes(msg_id):
     
     msg = Message.query.get_or_404(msg_id)
     
-    if msg.user_id != g.user.id:
-        new_likes = Likes(user_id=g.user.id, message_id=msg_id)
-
+    #if user likes their own post, flashes error
+    if msg.user_id == g.user.id:
+        flash("ERROR", "danger")
+        return redirect("/")
+    
+    new_likes = Likes(user_id=g.user.id, message_id=msg_id)
     db.session.add(new_likes)
     db.session.commit()
     
-    flash("You liked this post", "success")
+    flash(f"You liked {msg.user.username}'s post", "success")
     return redirect("/")
 
     
@@ -303,8 +306,9 @@ def delete_like(msg_id):
         return redirect("/")
     
     msg = Message.query.get_or_404(msg_id)
-    if msg.user_id != g.user.id:
-        flash(f"You just unliked {msg.user.username}'s post.", "danger")
+    # if msg.user_id == g.user.likes:
+    if msg not in g.user.likes:
+        # flash(f"You just unliked {msg.user.username}'s post.", "danger")
         return redirect("/")
     
     remove_like = Likes.query.filter(Likes.user_id == g.user.id, Likes.message_id == msg_id).first()
@@ -312,7 +316,8 @@ def delete_like(msg_id):
     db.session.delete(remove_like)
     db.session.commit()
     
-    flash("You unliked this post", "success")
+    # flash("You unliked this post", "success")
+    flash(f"You just unliked {msg.user.username}'s post.", "danger")
     return redirect("/")
 
 @app.route("/users/<int:user_id>/likes")
@@ -417,7 +422,7 @@ def homepage():
                     .limit(100)
                     .all())
 
-        return render_template('home.html', messages=messages)
+        return render_template('home.html', messages=messages, likes=likes)
 
     else:
         return render_template('home-anon.html')
