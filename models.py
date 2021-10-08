@@ -96,6 +96,8 @@ class User(db.Model):
     )
 
     messages = db.relationship('Message')
+    # secondary="users"
+    # overlaps = "message"
 
     followers = db.relationship(
         "User",
@@ -107,8 +109,10 @@ class User(db.Model):
     following = db.relationship(
         "User",
         secondary="follows",
+        overlaps="followers",
         primaryjoin=(Follows.user_following_id == id),
         secondaryjoin=(Follows.user_being_followed_id == id)
+        
     )
 
     likes = db.relationship(
