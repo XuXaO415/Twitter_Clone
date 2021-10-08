@@ -63,6 +63,8 @@ class UserModelTestCase(TestCase):
         Message.query.delete()
         Follows.query.delete()
         Likes.query.delete()
+        # db.session.commit()
+        
 
         self.client = app.test_client()
         
@@ -72,10 +74,16 @@ class UserModelTestCase(TestCase):
         self.user3 = user3
         
         db.session.add_all([user, user1, user2, user3])
+        # db.session.add(user)
+        # db.session.add(user1)
+        # db.session.add(user2)
+        # db.session(user3)
         db.session.commit()
         
         
     def tearDown(self):
+        # db.session.remove()
+        # db.drop_all()
         db.session.rollback()
         
         
@@ -87,10 +95,38 @@ class UserModelTestCase(TestCase):
         self.assertEqual(len(self.user1.messages), 0)
         self.assertEqual(len(self.user2.messages), 0)
         self.assertEqual(len(self.user3.messages), 0)
-        self.assertEqual(len(user.followers), 0)
-        self.assertEqual(len(user1.followers), 0)
-        self.assertEqual(len(user2.followers), 0)
-        self.assertEqual(len(user3.followers), 0)
         
-        self.assertEqual(str(self.user),
-        f"<User #{self.user.id}: {self.user.username}, {self.user.email}>")
+        self.assertEqual(len(self.user.followers), 0)
+        self.assertEqual(len(self.user1.followers), 0)
+        self.assertEqual(len(self.user2.followers), 0)
+        self.assertEqual(len(self.user3.followers), 0)
+        
+        # self.assertEqual(len(self.user.following), 0)
+        # self.assertEqual(len(self.user1.following), 0)
+        # self.assertEqual(len(self.user2.following), 0)
+        # self.assertEqual(len(self.user3.following), 0)
+        
+        # self.assertEqual(len(self.user.is_following), 0)
+        # self.assertEqual(len(self.user1.is_following), 0)
+        # self.assertEqual(len(self.user2.is_following), 0)
+        # self.assertEqual(len(self.user3.is_following), 0)
+    
+    def test_repr(self):
+        self.assertEqual(repr(self.user),
+        # f"<User #{self.user.id}: {self.user.username}, {self.user.email}>")
+        f"<User #{self.user.id}: testuser, test@test.com>")
+        
+    # def test_is_following(self):
+    #     """Test detects whether both user1 is 
+    #     following/not following user 2
+    #     """
+        
+        # self.user1.following.append(self.user2)
+        # db.session.commit()
+        
+        # self.user1.following.append(self.user2)
+        
+        # self.assertTrue(self.user1.is_following(self.user2))
+        # self.assertFalse(self.user2.is_following(self.user1))
+
+   
