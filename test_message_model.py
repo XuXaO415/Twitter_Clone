@@ -1,8 +1,8 @@
-"""User test model"""
+"""Message model test"""
 
 # run these tests like:
 #
-#  python -m unittest test_message_model.py
+# python -m unittest test_message_model.py
 
 from app import app
 import os
@@ -23,26 +23,32 @@ from app import app
 db.create_all()
 
 class UserModelTestCase(TestCase):
+    """Test views for messages"""
+    
+    
     def setUp(self):
         User.query.delete()
         Message.query.delete()
         Follows.query.delete()
-    # Test User 0 
-        test_user0 = User(email='test_email@test.com', 
-                            username='webbmark', 
-                            password='HASHED_PASSWORD')
-        db.session.add(test_user0)
-        db.session.commit()
-
-        self.test_user0 = test_user0
-
-        test_message0 = Message(text='test message',
-                                user_id=test_user0.id
-                                )
+        Likes.query.delete()
         
-        db.session.add(test_message0)
-        db.session.commit()
-
-        self.test_message0 = test_message0
-
         self.client = app.test_client()
+        
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+
+    def test_message_model(self):
+        """Test basic message model workings"""
+        
+        # User should have at least message
+        self.assertEqual(len(self.user.messages), 1)
+        self.assertEqual(Message.query.count(), 1)
+
+        self.assertEqual(self.message.text, "lorum ipsum")
+        self.assertEqual(self.message.user_if, self.user.id)
+        self.assertEqual(self.message.user, self.user)
+    #     db.session.commit()
+        

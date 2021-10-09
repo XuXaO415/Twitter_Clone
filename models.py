@@ -98,6 +98,9 @@ class User(db.Model):
     messages = db.relationship('Message')
     # secondary="users"
     # overlaps = "message"
+    
+    # messages = db.relationship('User')
+    # overlaps = "messages"
 
     followers = db.relationship(
         "User",
