@@ -145,8 +145,6 @@ class UserModelTestCase(TestCase):
         # self.assertEqual(len(self.user2.is_following), 0)
         # self.assertEqual(len(self.user3.is_following), 0)
 
-    # def test_repr(self):
-
 
     # # def test_is_following(self):
     #     """Test detects whether both user1 is 
@@ -170,5 +168,17 @@ class UserModelTestCase(TestCase):
     #     # self.assertEqual(len(self.user1.followers), 0)
     #     # self.assertEqual(len(self.user1.following), 1)
 
-    #     # self.assertEqual(self.user2.followers[0].id, self.user1.id)
-    #     # self.assertEqual(self.user1.following[0].id, self.user2.id)
+# Does User.create successfully create a new user given valid credentials?
+# Does User.create fail to create a new user if any of the validations(e.g. uniqueness, non-nullable fields) fail?
+# Does User.authenticate successfully return a user when given a valid username and password?
+# Does User.authenticate fail to return a user when the username is invalid?
+# Does User.authenticate fail to return a user when the password is invalid?
+
+@classmethod
+def test_create_user(self):
+    """Test new user creation"""
+    new_user = User("new_user", "new_user@gmail.com", "HASHED_PASSWORD")
+    db.session.add(new_user)
+    db.session.commit()
+    self.assertEqual(repr(new_user.username))
+    
