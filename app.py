@@ -111,21 +111,6 @@ def login():
         flash("Invalid credentials.", 'danger')
 
     return render_template('users/login.html', form=form)
-    
-    # form = LoginForm()
-    
-    # if form.validate_on_submit():
-    #     username = form.username.data
-    #     password = form.password.data
-        
-    #     user = User.authenticate(username, password)
-    #     if user:
-    #         session["user_id"] = user.id 
-    #         flash("Invalid credentials.", 'danger')
-    #         return redirect("/")
-        
-    #     else:
-    #         return render_template('users/login.html', form=form)
         
 
 @app.route('/logout_user')
@@ -138,7 +123,7 @@ def logout_users():
 # @app.route('/logout')
 # def logout():
 #     """Handle logout of user."""
-#     # Step 2: Fix Logout -- DONE
+#     # Step 2: Fix Logout -- DONE -- still doesn't work
 
 #     pdb.set_trace()
 #     do_logout()

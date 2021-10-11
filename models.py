@@ -105,6 +105,8 @@ class User(db.Model):
     followers = db.relationship(
         "User",
         secondary="follows",
+        #added this
+        overlaps="following",
         primaryjoin=(Follows.user_being_followed_id == id),
         secondaryjoin=(Follows.user_following_id == id)
     )
@@ -112,6 +114,7 @@ class User(db.Model):
     following = db.relationship(
         "User",
         secondary="follows",
+        #added this
         overlaps="followers",
         primaryjoin=(Follows.user_following_id == id),
         secondaryjoin=(Follows.user_being_followed_id == id)

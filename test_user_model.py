@@ -101,6 +101,14 @@ class UserModelTestCase(TestCase):
         db.session.add_all([user, user1, user2, user3])
         db.session.commit()
         
+        follow = Follows(
+            user_following_id=user.id,
+            user_being_followed_id=user1.id
+        )
+        
+        db.session.add(follow)
+        db.session.commit()
+        
         self.assertEqual(repr(self.user),
                          f"<User #{self.user.id}: {self.user.username}, {self.user.email}>")
                         #  f"<User #{self.user.id}: testuser, test@test.com>")
