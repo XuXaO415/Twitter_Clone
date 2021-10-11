@@ -42,7 +42,7 @@ class UserModelTestCase(TestCase):
 
     def test_message_model(self):
         """Test basic message model workings"""
-        # User should have at least message
+        # User should have at least one message
         self.assertEqual((self.user.messages), 1)
         self.assertEqual(Message.query.count(), 1)
 
