@@ -8,7 +8,6 @@
 from app import app
 import os
 from unittest import TestCase
-
 from models import db, User, Message, Follows
 
 # BEFORE we import our app, let's set an environmental variable
@@ -31,10 +30,6 @@ from app import app
 db.create_all()
 
 
-
-
-
-
 class UserViewTestCase(TestCase):
     """Test views for messages"""
     
@@ -47,5 +42,5 @@ class UserViewTestCase(TestCase):
         
         self.client = app.test_client()
         
-    def test_user_views(self):
+    # def test_user_views(self):
         

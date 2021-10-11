@@ -35,20 +35,19 @@ class UserModelTestCase(TestCase):
         self.client = app.test_client()
         
     def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
+        # db.session.remove()
+        # db.drop_all()
+        db.session.rollback()
 
 
     def test_message_model(self):
         """Test basic message model workings"""
-        
         # User should have at least message
-        self.assertEqual(len(self.user.messages), 1)
+        self.assertEqual((self.user.messages), 1)
         self.assertEqual(Message.query.count(), 1)
 
         self.assertEqual(self.message.text, "lorum ipsum")
-        self.assertEqual(self.message.user_if, self.user.id)
+        self.assertEqual(self.message.user_id, self.user.id)
         self.assertEqual(self.message.user, self.user)
     #     db.session.commit()
         
