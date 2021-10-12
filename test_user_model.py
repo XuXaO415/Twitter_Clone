@@ -115,64 +115,21 @@ class UserModelTestCase(TestCase):
         
         # self.assertNotEqual("self.user2.is_followed_by", "self.user3")
         self.assertNotEqual(self.user1.is_followed_by, (self.user))
-  
-    #     # User should have no messages & no followers
-    #     self.assertEqual(len(self.user.messages), 0)
-    #     self.assertEqual(len(self.user1.messages), 0)
-    #     self.assertEqual(len(self.user2.messages), 0)
-    #     self.assertEqual(len(self.user3.messages), 0)
+    
 
-    #     self.assertEqual(len(self.user.followers), 0)
-    #     # AssertionError: 1 != 0, replaced 0 with 1
-    #     self.assertEqual(len(self.user1.followers), 1)
-    #     self.assertEqual(len(self.user2.followers), 0)
-    #     self.assertEqual(len(self.user3.followers), 0)
-    #     #AssertionError: 1 != 0
-    #     self.assertEqual(len(self.user.following), 1)
-    #     self.assertEqual(len(self.user1.following), 0)
-    #     self.assertEqual(len(self.user2.following), 0)
-    #     self.assertEqual(len(self.user3.following), 0)
-    # # # def test_is_following(self):
-    #     """Test detects whether both user1 is
-    #     following/not following user 2
-    #     """
+        # self.user1.following.append(self.user2)
 
-    #     self.user1.following.append(self.user2)
-    #     self.assertTrue(self.user1.is_following(self.user2))
-    #     # db.session.commit()
+        # self.assertTrue(self.user1.is_following(self.user2))
+        # self.assertFalse(self.user2.is_following(self.user1))
 
-    #     # self.user1.following.append(self.user2)
+        # self.u1.following.append(self.user2)
+        # db.session.commit()
 
-    #     # self.assertTrue(self.user1.is_following(self.user2))
-    #     # self.assertFalse(self.user2.is_following(self.user1))
+        # self.assertEqual(len(self.user2.following), 0)
+        # self.assertEqual(len(self.user2.followers), 1)
+        # self.assertEqual(len(self.user1.followers), 0)
+        # self.assertEqual(len(self.user1.following), 1)
 
-    #     # self.u1.following.append(self.user2)
-    #     # db.session.commit()
-
-    #     # self.assertEqual(len(self.user2.following), 0)
-    #     # self.assertEqual(len(self.user2.followers), 1)
-    #     # self.assertEqual(len(self.user1.followers), 0)
-    #     # self.assertEqual(len(self.user1.following), 1)
-
-    # def test_create_user(self):
-    #     """Test new user creation"""
-    #     self.new_user = User("new_user", "new_user@test.com", "HASHED_PASSWORD")
-    #     db.session.add(self.new_user)
-    #     db.session.commit()
-    #     self.assertEqual(repr(self.new_user.username), 'self.new_user')
-
-    # @classmethod
-    # def test_authentication(self):
-    #     """Test successful user authentication when user enters valid username and password"""
-    #     self.user = User(username="testuser")
-    #     self.user.password("correctpassword123")
-    #     self.assertFalse(self.user)
-
-# @classmethod
-# def test_random_password(self):
-#     self.user = User(password='somerandompassword')
-#     self.user1 = User(password='someotherpassword')
-#     self.assertTrue(self.user.password_hash != self.user1.password_hash)
 
     @classmethod
     def test_create_user(self):
@@ -180,20 +137,21 @@ class UserModelTestCase(TestCase):
         db.session.add(self.new_user)
         db.session.commit()
         self.assertTrue(self.new_user.username, "new_user")
-
-    # def test_user_fail(self):
-    #    (ser.signup("u != self.new_user_fail ser_fail", "user_fail@test.com", "HASHED_PASSWORD", "img_url=default")
-    #     db.session.add(self.new_user_fail)
-    #     # db.session.commit()
-    #     self.assertFalse(self.new_user_fail.username)
-    #     db.session.rollback()
+        
+    def test_user_authentication(self):
+        self.user_auth = User.authenticate("self.user3", "HASHED_PASSWORD")
+        # db.session.add(self.user_auth)
+        # db.session.commit()
+        self.assertTrue("self.user_auth", "self.user3")
+        db.session.rollback()
     
     def test_new_user_fail(self):
         self.user_fail = User.signup("randomUser", "anotherNewUser@test.com", "HASHED_PASSWORD", "img_url=None")
-        db.session.add(self.user_fail)
-        db.session.commit()
-        # self.assertFalse()
-
+        # db.session.add(self.user_fail)
+        # db.session.commit()
+        self.assertNotEqual(self.user_fail.username, "randomUser.username")
+        db.session.rollback()
+        
     def test_user_fail(self):
         self.new_user_fail = User.authenticate("self.new_user_fail", "self.user_fail@test.com")
         self.assertNotEqual("self.new_user_fail", "self.user", "self.some_other_user")
