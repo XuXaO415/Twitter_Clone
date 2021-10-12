@@ -7,6 +7,7 @@
 import os
 from unittest import TestCase
 from models import db, User, Message, Follows, Likes
+import datetime
 
 os.environ['DATABASE_URL'] = "postgresql:///warbler-test"
 
@@ -23,46 +24,48 @@ db.create_all()
 
 class UserModelTestCase(TestCase):
     """Test views for messages"""
-    
-    
+
+
     def setUp(self):
         User.query.delete()
         Message.query.delete()
         Follows.query.delete()
         Likes.query.delete()
-        
+
         self.client = app.test_client()
-        
-        
-        kwargs = User.signup(
+
+
+        user1 = User(
             email="user1@test.com",
             username="testuser1",
             password="hashed_pwd"
-        ),
+        )
 
-        user2 = User.signup(
+        user2 = User(
             email="user2@test.com",
             username="testuser2",
             password="hashed_pwd"
         )
-        
-        user = User(**kwargs)
-        db.session.add(user)
+
+        db.session.add_all([user1, user2])
         db.session.commit()
-        
-        self.user = user        
-        
+
+        self.user1 = user1
+        self.user2 = user2
+
         kwargs = {
-            "text":"lorum ipsom",
-            "user_id":"self.user.id"     
+            "text": "lorum ipsom",
+            "user_id": "self.user.id",
+            "timestamp": "datetime.utcnow()"
         }
-        
+
         message = Message(**kwargs)
         db.session.add(message)
         db.session.commit()
-        
-        message = self.message
-        
+        # https://www.oreilly.com/library/view/test-driven-development-with/9781449365141/ch16.html
+
+        self.message = message
+
     def tearDown(self):
         # db.session.remove()
         # db.drop_all()
@@ -78,4 +81,3 @@ class UserModelTestCase(TestCase):
         self.assertEqual(self.message.text, "lorum ipsum")
         self.assertEqual(self.message.user_id, self.user.id)
         self.assertEqual(self.message.user, self.user)
-        
