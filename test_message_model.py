@@ -4,7 +4,6 @@
 #
 # python -m unittest test_message_model.py
 
-from app import app
 import os
 from unittest import TestCase
 from models import db, User, Message, Follows, Likes
@@ -34,6 +33,36 @@ class UserModelTestCase(TestCase):
         
         self.client = app.test_client()
         
+        
+        kwargs = User.signup(
+            email="user1@test.com",
+            username="testuser1",
+            password="hashed_pwd"
+        ),
+
+        user2 = User.signup(
+            email="user2@test.com",
+            username="testuser2",
+            password="hashed_pwd"
+        )
+        
+        user = User(**kwargs)
+        db.session.add(user)
+        db.session.commit()
+        
+        self.user = user        
+        
+        kwargs = {
+            "text":"lorum ipsom",
+            "user_id":"self.user.id"     
+        }
+        
+        message = Message(**kwargs)
+        db.session.add(message)
+        db.session.commit()
+        
+        message = self.message
+        
     def tearDown(self):
         # db.session.remove()
         # db.drop_all()
@@ -49,5 +78,4 @@ class UserModelTestCase(TestCase):
         self.assertEqual(self.message.text, "lorum ipsum")
         self.assertEqual(self.message.user_id, self.user.id)
         self.assertEqual(self.message.user, self.user)
-    #     db.session.commit()
         
