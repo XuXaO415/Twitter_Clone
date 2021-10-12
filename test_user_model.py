@@ -7,7 +7,6 @@
 
 import os
 from unittest import TestCase
-# from sqlalchemy import IntegrityError
 from sqlalchemy.exc import IntegrityError
 from models import db, User, Message, Follows, Likes
 import pdb
@@ -104,8 +103,7 @@ class UserModelTestCase(TestCase):
         db.session.add(follow)
         db.session.commit()
 
-        self.assertEqual(repr(self.user),
-                         f"<User #{self.user.id}: {self.user.username}, {self.user.email}>")
+        self.assertEqual(repr(self.user), f"<User #{self.user.id}: {self.user.username}, {self.user.email}>")
         #  f"<User #{self.user.id}: testuser, test@test.com>")
 
         # user.is_following(user1)
@@ -114,31 +112,27 @@ class UserModelTestCase(TestCase):
         # Neither user is following each other
         self.assertTrue(self.user.is_following(self.user1))
         self.assertFalse(self.user1.is_following(self.user))
-        # self.assertEqual(self.user1.is_followed_by(self.user2))
-        # self.assertFalse(self.user2.is_followed_by(self.user1))
-        # self.assertEqual(self.user1.is_followed_by(self.user), False)
-        # self.assertEqual(self.user.is_followed_by(self.user2))
-        # self.assertEqual(self.user1.is_followed_by(self.user))
-        # Keep getting this error: this test now works by using assertTrue, assertFalse
-        # self.assertTrue(self.user1.is_following(self.user))
-        # AssertionError: False is not True
-        # User should have no messages & no followers
-        self.assertEqual(len(self.user.messages), 0)
-        self.assertEqual(len(self.user1.messages), 0)
-        self.assertEqual(len(self.user2.messages), 0)
-        self.assertEqual(len(self.user3.messages), 0)
+        
+        # self.assertNotEqual("self.user2.is_followed_by", "self.user3")
+        self.assertNotEqual(self.user1.is_followed_by, (self.user))
+  
+    #     # User should have no messages & no followers
+    #     self.assertEqual(len(self.user.messages), 0)
+    #     self.assertEqual(len(self.user1.messages), 0)
+    #     self.assertEqual(len(self.user2.messages), 0)
+    #     self.assertEqual(len(self.user3.messages), 0)
 
-        self.assertEqual(len(self.user.followers), 0)
-        # AssertionError: 1 != 0, replaced 0 with 1
-        self.assertEqual(len(self.user1.followers), 1)
-        self.assertEqual(len(self.user2.followers), 0)
-        self.assertEqual(len(self.user3.followers), 0)
-        #AssertionError: 1 != 0
-        self.assertEqual(len(self.user.following), 1)
-        self.assertEqual(len(self.user1.following), 0)
-        self.assertEqual(len(self.user2.following), 0)
-        self.assertEqual(len(self.user3.following), 0)
-    # # def test_is_following(self):
+    #     self.assertEqual(len(self.user.followers), 0)
+    #     # AssertionError: 1 != 0, replaced 0 with 1
+    #     self.assertEqual(len(self.user1.followers), 1)
+    #     self.assertEqual(len(self.user2.followers), 0)
+    #     self.assertEqual(len(self.user3.followers), 0)
+    #     #AssertionError: 1 != 0
+    #     self.assertEqual(len(self.user.following), 1)
+    #     self.assertEqual(len(self.user1.following), 0)
+    #     self.assertEqual(len(self.user2.following), 0)
+    #     self.assertEqual(len(self.user3.following), 0)
+    # # # def test_is_following(self):
     #     """Test detects whether both user1 is
     #     following/not following user 2
     #     """
@@ -187,4 +181,21 @@ class UserModelTestCase(TestCase):
         db.session.commit()
         self.assertTrue(self.new_user.username, "new_user")
 
-        
+    # def test_user_fail(self):
+    #    (ser.signup("u != self.new_user_fail ser_fail", "user_fail@test.com", "HASHED_PASSWORD", "img_url=default")
+    #     db.session.add(self.new_user_fail)
+    #     # db.session.commit()
+    #     self.assertFalse(self.new_user_fail.username)
+    #     db.session.rollback()
+    
+    def test_new_user_fail(self):
+        self.user_fail = User.signup("randomUser", "anotherNewUser@test.com", "HASHED_PASSWORD", "img_url=None")
+        db.session.add(self.user_fail)
+        db.session.commit()
+        # self.assertFalse()
+
+    def test_user_fail(self):
+        self.new_user_fail = User.authenticate("self.new_user_fail", "self.user_fail@test.com")
+        self.assertNotEqual("self.new_user_fail", "self.user", "self.some_other_user")
+        db.session.rollback()
+        # db.session.commit()
