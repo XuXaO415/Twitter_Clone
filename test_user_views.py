@@ -4,7 +4,6 @@
 #
 # python -m unittest test_user_views.py
 
-
 from app import app
 import os
 from unittest import TestCase
@@ -17,11 +16,9 @@ from models import db, User, Message, Follows, Likes
 
 os.environ['DATABASE_URL'] = "postgresql:///warbler-test"
 
-
 # Now we can import app
 
 from app import app, CURR_USER_KEY
-
 
 # Create our tables (we do this here, so we only create the tables
 # once for all tests --- in each test, we'll delete the data
@@ -36,9 +33,9 @@ app.config['WTF_CSRF_ENABLED'] = False
 # app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
 # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
+
 class UserViewTestCase(TestCase):
     """Test views for messages"""
-
     def setUp(self):
         """Create test client & add sample data"""
 
@@ -53,15 +50,14 @@ class UserViewTestCase(TestCase):
                                     email="test123@test.com",
                                     password="testuser",
                                     image_url=None)
-        
+
         self.testuser2 = User.signup(username="testuser2",
-                                    email="testabc@test.com",
-                                    password="testuser",
-                                    image_url=None)
-        
+                                     email="testabc@test.com",
+                                     password="testuser",
+                                     image_url=None)
+
         db.session.add_all([self.testuser, self.testuser2])
         db.session.commit()
-
 
     def tearDown(self):
         db.session.rollback()
@@ -70,25 +66,27 @@ class UserViewTestCase(TestCase):
         """When user is logged in, test checks whether you can see 
         follower/following pages of other users 
         """
-        
+
         with self.client as c:
             with c.session_transaction() as sess:
                 sess[CURR_USER_KEY] = self.testuser.id
-                
+
         user = User.query.get(self.testuser.id)
         user.following.append(self.testuser2)
         db.session.commit()
-        
-        resp = c.get("/users/following/{testuser.id}")
-        data = resp.get_data(as_text=True)
-        self.assertTrue(self.testuser, data)
-        
-        
-            # <form method="POST" action="/users/follow/{{ followed_user.id }}">
-            #  resp = c.post("/messages/new", data={"text": "Hello"})
-            #    <li><a href="/messages/new">New Message</a></li>
-            # Make sure it redirects
-            # self.assertEqual(resp.status_code, 302)
 
-            # msg = Message.query.one()
-            # self.assertEqual(msg.text, "Hello")
+        resp = c.get(
+            f"/users/follow/{self.testuser.id}, /users/following/{self.testuser2.id} "
+        )
+        data = resp.get_data(as_text=True)
+        self.assertTrue("self.testuser.id", data)
+        # self.assertEqual(resp.status_code, 404)
+
+    def test_user_logout(self):
+        # with app.test_client() as c:
+        # resp = c.get("/users/logout_user")
+        resp = self.client.get("/users/log-out",
+                               follow_redirects=True)
+        data = resp.get_data(as_text=True)
+        # self.assertTrue(self.testuser, data)
+        self.assertEqual(resp.status_code, 200)
