@@ -38,46 +38,36 @@ class UserModelTestCase(TestCase):
         user1 = User(
             email="user1@test.com",
             username="testuser1",
-            password="hashed_pwd"
+            password="hashed_pwd",
+            id=1,
         )
-
-        user2 = User(
-            email="user2@test.com",
-            username="testuser2",
-            password="hashed_pwd"
+        
+        message = Message(
+            text = "lorum ipsum",
+            id = 1,
+            user_id = 1,
+            # user_id = self.user.id
         )
-
-        db.session.add_all([user1, user2])
+        
+        db.session.add_all([user1, message])
         db.session.commit()
-
+        
         self.user1 = user1
-        self.user2 = user2
-
-        kwargs = {
-            "text": "lorum ipsom",
-            "user_id": "self.user.id",
-            "timestamp": "datetime.utcnow()"
-        }
-
-        message = Message(**kwargs)
-        db.session.add(message)
-        db.session.commit()
-        # https://www.oreilly.com/library/view/test-driven-development-with/9781449365141/ch16.html
-
         self.message = message
 
     def tearDown(self):
-        # db.session.remove()
-        # db.drop_all()
         db.session.rollback()
 
 
     def test_message_model(self):
         """Test basic message model workings"""
         # User should have at least one message
-        self.assertEqual((self.user.messages), 1)
+        self.assertTrue((self.message), 1)
         self.assertEqual(Message.query.count(), 1)
 
         self.assertEqual(self.message.text, "lorum ipsum")
-        self.assertEqual(self.message.user_id, self.user.id)
-        self.assertEqual(self.message.user, self.user)
+        self.assertEqual(self.message.id, 1)
+        self.assertEqual(self.message.user.id, 1)
+        self.assertEqual(self.user1.email, "user1@test.com")
+        self.assertEqual(self.user1.username, "testuser1")
+        
