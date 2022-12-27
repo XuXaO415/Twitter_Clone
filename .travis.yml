@@ -1,0 +1,9 @@
+language: python
+python: 
+- '3.10.9'
+script:
+- flask run
+
+deploy:
+provider: heroku
+app: warbler-a-twitter-clone
